@@ -1,0 +1,74 @@
+{
+  "clusterName": "minikube",
+  "scannerInfo": {
+    "scannerName": "Kubescape",
+    "version": "v2.0.154",
+    "scannedAt": "2024-09-15T10:15:00Z"
+  },
+  "summary": {
+    "totalResources": 25,
+    "totalPassed": 18,
+    "totalFailed": 7,
+    "totalHighSeverity": 3,
+    "totalMediumSeverity": 3,
+    "totalLowSeverity": 1
+  },
+  "findings": [
+    {
+      "resource": "Pod: nginx-deployment",
+      "namespace": "default",
+      "severity": "High",
+      "category": "Workload",
+      "description": "Containers in this workload are running as root, which poses security risks.",
+      "remediation": "Ensure that containers do not run as root. Use a non-root user with limited privileges."
+    },
+    {
+      "resource": "ServiceAccount: default",
+      "namespace": "kube-system",
+      "severity": "Medium",
+      "category": "RBAC",
+      "description": "The default service account has full access to all namespaces, which can be a security risk.",
+      "remediation": "Limit the permissions of the default service account or create dedicated service accounts with appropriate roles."
+    },
+    {
+      "resource": "NetworkPolicy: allow-all",
+      "namespace": "default",
+      "severity": "High",
+      "category": "Network",
+      "description": "This network policy allows traffic from any source, which can expose the cluster to external attacks.",
+      "remediation": "Define stricter network policies that limit traffic to only required sources and destinations."
+    },
+    {
+      "resource": "PodSecurityPolicy: unrestricted-policy",
+      "namespace": "security-namespace",
+      "severity": "Medium",
+      "category": "Pod Security",
+      "description": "The pod security policy is too permissive and allows privileged containers, which can escalate privileges.",
+      "remediation": "Restrict pod security policies to disallow privileged containers."
+    },
+    {
+      "resource": "Pod: redis-deployment",
+      "namespace": "default",
+      "severity": "Low",
+      "category": "Configuration",
+      "description": "The container image used has vulnerabilities according to public databases.",
+      "remediation": "Update the container image to a newer version that has fewer vulnerabilities."
+    },
+    {
+      "resource": "Ingress: public-ingress",
+      "namespace": "default",
+      "severity": "High",
+      "category": "Network",
+      "description": "The Ingress is exposing services to the public without SSL, making them vulnerable to man-in-the-middle attacks.",
+      "remediation": "Use SSL/TLS for all Ingress resources that expose services to the internet."
+    },
+    {
+      "resource": "ConfigMap: db-config",
+      "namespace": "default",
+      "severity": "Medium",
+      "category": "Configuration",
+      "description": "Sensitive data like passwords are stored in a ConfigMap, which is not encrypted.",
+      "remediation": "Use Kubernetes Secrets to store sensitive data instead of ConfigMaps."
+    }
+  ]
+}
